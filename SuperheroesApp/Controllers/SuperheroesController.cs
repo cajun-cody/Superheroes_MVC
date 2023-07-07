@@ -1,16 +1,24 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SuperheroesApp.Data;
 using SuperheroesApp.Models;
 
 namespace SuperheroesApp.Controllers
 {
     public class SuperheroesController : Controller
     {
+        private readonly ApplicationDbContext _context;
+        public SuperheroesController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+    
         // GET: SuperheroesController
         public ActionResult Index()
         {
-            
-            return View();
+            var superheroes = _context.Superheroes.ToList();
+            return View(superheroes);
         }
 
         // GET: SuperheroesController/Details/5
@@ -32,11 +40,13 @@ namespace SuperheroesApp.Controllers
         {
             try
             {
+                _context.Superheroes.Add(superhero);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(superhero);
             }
         }
 
