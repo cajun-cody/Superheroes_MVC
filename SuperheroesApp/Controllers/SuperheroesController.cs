@@ -17,14 +17,17 @@ namespace SuperheroesApp.Controllers
         // GET: SuperheroesController
         public ActionResult Index()
         {
+            //Query to get list of superheros
             var superheroes = _context.Superheroes.ToList();
             return View(superheroes);
         }
 
-        // GET: SuperheroesController/Details/5
+        // GET: SuperheroesController/Details/5   
         public ActionResult Details(int id)
         {
-            return View();
+            //Query to get info for 1 superhero
+            var hero = _context.Superheroes.Find(id);
+            return View(hero);
         }
 
         // GET: SuperheroesController/Create
@@ -53,42 +56,53 @@ namespace SuperheroesApp.Controllers
         // GET: SuperheroesController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            //Find the superhero to edit.
+            var superhero = _context.Superheroes.Find(id);
+            return View(superhero);
         }
 
         // POST: SuperheroesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Superhero superhero)
+        public ActionResult Edit(int id, Superhero editSuperhero)
         {
             try
             {
+                //After hero is found, make changes update and save. 
+                _context.Superheroes.Update(editSuperhero);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                var superhero = _context.Superheroes.Find(id);
+                return View(superhero);
             }
         }
 
         // GET: SuperheroesController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var superhero = (_context.Superheroes.Find(id));
+            return View(superhero);
         }
 
         // POST: SuperheroesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Superhero superhero)
+        public ActionResult Delete(int id, Superhero deleteSuperhero)
         {
             try
             {
+                //After superhero is found delete the hero and save changes. 
+                _context.Superheroes.Remove(deleteSuperhero);
+                _context.SaveChanges(); 
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                var superhero = _context.Superheroes.Find(id);
+                return View(superhero);
             }
         }
     }
